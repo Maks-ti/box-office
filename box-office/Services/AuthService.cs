@@ -162,7 +162,7 @@ public class AuthService
         {
             Id = 0,
             Login = model.Login,
-            Name = model.Login,
+            Name = model.Name,
             Salt = salt,
             PasswordHash = passwordHash,
             IsAdmin = model.IsAdmin

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace box_office.DataBase.Models;
 
-public class Session
+public class Session : IBaseEntity
 {
     public int Id { get; set; }
     public DateTime DateFrom { get; set; }

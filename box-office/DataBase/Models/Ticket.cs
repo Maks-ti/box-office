@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace box_office.DataBase.Models;
 
-public class Ticket
+public class Ticket : IBaseEntity
 {
     public int Id { get; set; }
     public int SessionId { get; set; }

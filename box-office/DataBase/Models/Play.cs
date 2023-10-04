@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace box_office.DataBase.Models;
 
-public class Play
+public class Play : IBaseEntity
 {
     public int Id { get; set; }
     public string Name { get; set; }

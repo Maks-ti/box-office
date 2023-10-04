@@ -1,5 +1,6 @@
 ﻿
 
+using box_office.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace box_office.Controllers;
@@ -8,13 +9,22 @@ namespace box_office.Controllers;
 [ApiController]
 public class PlayController : AppControllerBase
 {
-    public PlayController(IServiceProvider serviceProvider, ILogger<PlayController> logger) :
+    private PlayService PlayService { get; set; }
+    public PlayController(IServiceProvider serviceProvider, ILogger<PlayController> logger, PlayService service) :
         base(serviceProvider, logger)
-    { }
+    { PlayService = service; }
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAll()
     {
-        return Ok("этот метод можно использовать только по токену");
+        var result = await PlayService.GetAllAsync();
+
+        return Ok(result);
+    }
+
+    [HttpGet("[action]")]
+    public async Task<IActionResult> Get([FromQuery] int id)
+    {
+        return Ok();
     }
 }

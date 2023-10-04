@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using box_office.Services;
 
 namespace box_office.Controllers;
 
