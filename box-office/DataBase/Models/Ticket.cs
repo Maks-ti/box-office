@@ -9,7 +9,7 @@ public class Ticket : IBaseEntity
     public int Id { get; set; }
     public int SessionId { get; set; }
     public int PlaceId { get; set; }
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
     public virtual Place Place { get; set; }
     public virtual Session Session { get; set; }
     public virtual User User { get; set; }

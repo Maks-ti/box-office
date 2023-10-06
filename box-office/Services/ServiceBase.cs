@@ -56,7 +56,7 @@ public abstract class ServiceBase<TEntity> where TEntity : class, IBaseEntity
 
         var oldEntity = await dbSet.FirstOrDefaultAsync(e => e.Id == entityId);
 
-        if (oldEntity == null) return;
+        if (oldEntity == null) throw new ArgumentException($"{nameof(TEntity)} с id = {entityId} не существует");
 
         if (context.Entry(oldEntity).State == EntityState.Detached)
         {
@@ -87,7 +87,7 @@ public abstract class ServiceBase<TEntity> where TEntity : class, IBaseEntity
 
         DbSet<TEntity> dbSet = context.Set<TEntity>();
 
-        if ((await dbSet.AnyAsync(e => e.Id == entity.Id)) == false) return null; // сущности в базе нет (не обновляем)
+        if ((await dbSet.AnyAsync(e => e.Id == entity.Id)) == false) throw new ArgumentException($"{nameof(TEntity)} с id = {entity.Id} не существует"); // сущности в базе нет (не обновляем)
 
         dbSet.Update(entity);
 
