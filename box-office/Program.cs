@@ -204,6 +204,8 @@ try
                                 HttpLoggingFields.ResponseHeaders |
                                 HttpLoggingFields.ResponseBody;
     });
+
+    builder.Services.AddControllersWithViews(); // Добавление служб для работы с контроллерами и представлениями
     #endregion
 
     #region CORS
@@ -254,6 +256,12 @@ try
 
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapControllerRoute(
+        name: "login",
+        pattern: "LoginPage/LoginPage", // Путь к странице авторизации
+        defaults: new { controller = "LoginPage", action = "LoginPage" } // Контроллер и действие для страницы авторизации
+        );
+
         endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");

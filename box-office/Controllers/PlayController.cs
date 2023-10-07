@@ -63,11 +63,11 @@ public class PlayController : AppControllerBase
     }
 
     [HttpPut("[action]")]
-    public async Task<IActionResult> Update(IFormFile pictureFile, [FromQuery] string name, [FromQuery] string Description)
+    public async Task<IActionResult> Update(IFormFile pictureFile, [FromQuery] string name, [FromQuery] string Description, [FromQuery] int PlayId)
     {
         try
         {
-            var result = await PlayService.UpdateAsync(pictureFile, name, Description);
+            var result = await PlayService.UpdateAsync(pictureFile, name, Description, PlayId);
 
             return Ok(result);
         }

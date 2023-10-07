@@ -83,5 +83,4 @@ public class AuthController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
-
 }

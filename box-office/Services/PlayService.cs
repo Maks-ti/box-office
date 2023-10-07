@@ -90,7 +90,7 @@ public class PlayService : ServiceBase<DataBase.Models.Play>
         return oldPlay;
     }
 
-    public async Task<Play> UpdateAsync(IFormFile pictureFile, string name, string description)
+    public async Task<Play> UpdateAsync(IFormFile pictureFile, string name, string description, int PlayId)
     {
         bool fileIsEmpty = pictureFile == null || pictureFile.Length == 0;
 
@@ -110,7 +110,7 @@ public class PlayService : ServiceBase<DataBase.Models.Play>
 
         var play = new DataBase.Models.Play
         {
-            Id = 0,
+            Id = PlayId,
             Name = name,
             Description = description,
             PictureData = pictureData,

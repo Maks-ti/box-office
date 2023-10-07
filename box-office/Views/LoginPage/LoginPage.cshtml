@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация и Регистрация</title>
+</head>
+<body>
+    <h1>Авторизация и Регистрация</h1>
+
+    <button type="button" onclick="toggleForm()">Переключиться</button>
+
+    <div id="loginFormBlock">
+        <h2>Вход</h2>
+        <form id="loginForm">
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required><br>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required><br>
+
+            <button type="button" onclick="ClickLogin()">Войти</button>
+        </form>
+    </div>
+
+    <div id="registrationFormBlock" style="display: none;">
+        <h2>Регистрация</h2>
+        <form id="registrationForm">
+            <label for="regLogin">Логин:</label>
+            <input type="text" id="regLogin" name="login" required><br>
+
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="regPassword">Пароль:</label>
+            <input type="password" id="regPassword" name="password" required><br>
+
+            <label for="repeatPassword">Повторите пароль:</label>
+            <input type="password" id="repeatPassword" name="repeatPassword" required><br>
+
+            <label for="isAdmin">Администратор:</label>
+            <input type="checkbox" id="isAdmin" name="isAdmin"><br>
+
+            <button type="button" onclick="ClickRegister()">Зарегистрироваться</button>
+        </form>
+    </div>
+
+    <script defer>
+        function toggleForm() {
+            const loginForm = document.getElementById("loginFormBlock");
+            const registrationForm = document.getElementById("registrationFormBlock");
+
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                registrationForm.style.display = "none";
+            } else {
+                loginForm.style.display = "none";
+                registrationForm.style.display = "block";
+            }
+        }
+
+        async function ClickLogin() {
+            console.log("функция login вызвана");
+
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch('/api/Auth/Login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ login, password })
+            });
+
+            if (response.ok) {
+                const token = await response.text();
+                localStorage.setItem('jwtToken', token); // Сохраняем токен в локальном хранилище
+                alert(`Успешная авторизация! Токен: ${token}`);
+                redirectToMainPage();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Ошибка: ${errorMessage}`);
+            }
+        }
+
+        async function ClickRegister() {
+            console.log("функция register вызвана");
+
+            const regLogin = document.getElementById("regLogin").value;
+            const name = document.getElementById("name").value;
+            const regPassword = document.getElementById("regPassword").value;
+            const repeatPassword = document.getElementById("repeatPassword").value;
+            const isAdmin = document.getElementById("isAdmin").checked;
+
+            if (regPassword !== repeatPassword) {
+                alert("Пароли не совпадают!");
+                return;
+            }
+
+            const registrationModel = {
+                login: regLogin,
+                name: name,
+                password: regPassword,
+                repeatPassword: repeatPassword,
+                isAdmin: isAdmin
+            };
+
+            const response = await fetch('/api/Auth/Registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(registrationModel)
+            });
+
+            if (response.ok) {
+                const token = await response.text();
+                localStorage.setItem('jwtToken', token); // Сохраняем токен в локальном хранилище
+                alert(`Регистрация успешно завершена! Токен: ${token}`);
+                redirectToMainPage();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Ошибка: ${errorMessage}`);
+            }
+        }
+
+        function redirectToMainPage() {
+            console.log(localStorage.getItem('jwtToken'));
+            const token = localStorage.getItem('jwtToken');
+            const headers = new Headers();
+
+            if (token) {
+                headers.append('Authorization', `Bearer ${token}`);
+            }
+
+            const redirectRequest = new Request('/MainPage/MainPage', {
+                method: 'GET', // Или другой HTTP метод
+                headers: headers
+            });
+
+            window.location.href = redirectRequest.url;
+        }
+    </script>
+</body>
+</html>
