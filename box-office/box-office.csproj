@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\MainPage\SessionDetail.cshtml" />
+    <Content Remove="Views\MainPage\SessionPage.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
@@ -30,6 +35,11 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\SessionPage\SessionDetail.cshtml" />
+    <None Include="Views\SessionPage\SessionPage.cshtml" />
   </ItemGroup>
 
 </Project>

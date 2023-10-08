@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Details</title>
+    <!-- Bootstrap CSS -->
+    <style>
+        .div-with-borders {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <a href="SessionPage">Return to all sessions</a>
+    <div class="container">
+        <h1>Session Details</h1>
+
+        <div id="sessionDetails">
+            <!-- Детали сессии будут отображаться здесь -->
+        </div>
+
+        <div id="ticketsList">
+            <h2>Tickets</h2>
+            <!-- Здесь будут отображаться билеты для данной сессии -->
+        </div>
+    </div>
+
+    <script>
+        const sessionId = new URLSearchParams(window.location.search).get("id"); // Получаем ID сессии из URL
+
+        function toggleTicketSold(ticketId, isSold) {
+            fetch(`/api/Ticket/SetSold`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    TicketId: ticketId,
+                    IsSold: !isSold // Изменяем состояние на противоположное
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Если запрос прошел успешно - обновляем информацию о сессии
+                        location.reload();
+                    }
+                });
+        }
+
+        // Загрузим детали сессии при загрузке страницы
+        fetch(`/api/Session/Get?id=${sessionId}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                }
+            }
+        )
+            .then(response => response.json())
+            .then(session => {
+                // Отображаем детали сессии
+                const sessionDetails = document.getElementById("sessionDetails");
+                sessionDetails.innerHTML = `
+                        <h3>Session</h3>
+                        <p>Play Name: ${session.play.name}</p>
+                        <p>Hall Name: ${session.hall.name}</p>
+                        <p>Session start: ${session.dateFrom}</p>
+                        <p>Session end: ${session.dateTo}</p>
+                    `;
+
+                // Теперь отображаем билеты
+                session.tickets.forEach(ticket => {
+                    const ticketDiv = document.createElement("div");
+                    ticketDiv.setAttribute("class", "div-with-borders");
+                    ticketDiv.innerHTML = `
+                            <h4>Place: ${ticket.place.name}</h4>
+                            <p>Status: ${ticket.isSold ? "Sold" : "Available"}</p>
+                            <button onclick="toggleTicketSold(${ticket.id}, ${ticket.isSold})">${ticket.isSold ? "Return" : "Sell"}</button>
+                        `;
+                    document.getElementById("ticketsList").appendChild(ticketDiv);
+                });
+            });
+    </script>
+</body>
+
+</html>

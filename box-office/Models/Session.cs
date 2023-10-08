@@ -11,6 +11,7 @@ public class Session
     public int HallId { get; set; }
     public Play Play { get; set; }
     public Hall Hall { get; set; }
+    public List<Ticket>? Tickets { get; set; }
 }
 
 public class SessionCreateModel

@@ -14,10 +14,10 @@
         <h2>Вход</h2>
         <form id="loginForm">
             <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required><br>
+            <input type="text" class="form-control" id="login" name="login" required><br>
 
             <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required><br>
+            <input type="password" class="form-control" id="password" name="password" required><br>
 
             <button type="button" onclick="ClickLogin()">Войти</button>
         </form>
@@ -27,19 +27,19 @@
         <h2>Регистрация</h2>
         <form id="registrationForm">
             <label for="regLogin">Логин:</label>
-            <input type="text" id="regLogin" name="login" required><br>
+            <input type="text" id="regLogin" class="form-control" name="login" required><br>
 
             <label for="name">Имя:</label>
-            <input type="text" id="name" name="name" required><br>
+            <input type="text" id="name" class="form-control" name="name" required><br>
 
             <label for="regPassword">Пароль:</label>
-            <input type="password" id="regPassword" name="password" required><br>
+            <input type="password" class="form-control" id="regPassword" name="password" required><br>
 
             <label for="repeatPassword">Повторите пароль:</label>
-            <input type="password" id="repeatPassword" name="repeatPassword" required><br>
+            <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" required><br>
 
             <label for="isAdmin">Администратор:</label>
-            <input type="checkbox" id="isAdmin" name="isAdmin"><br>
+            <input type="checkbox" class="form-control" id="isAdmin" name="isAdmin"><br>
 
             <button type="button" onclick="ClickRegister()">Зарегистрироваться</button>
         </form>
@@ -137,10 +137,11 @@
             }
 
             let url = "";
-            if (localStorage.getItem("isAdmin")) {
+            const isAdm = localStorage.getItem("isAdmin");
+            if (isAdm == true) {
                 url = '/MainPage/AdminPage';
             } else {
-                url = '/MainPage/TicketPage';
+                url = '/SessionPage/SessionPage';
             }
             const redirectRequest = new Request(url, {
                 method: 'GET', // Или другой HTTP метод

@@ -21,6 +21,8 @@ public class SessionService : ServiceBase<DataBase.Models.Session>
             cfg.CreateMap<DataBase.Models.Session, Session>();
             cfg.CreateMap<DataBase.Models.Play, Play>();
             cfg.CreateMap<DataBase.Models.Hall, Hall>();
+            cfg.CreateMap<DataBase.Models.Ticket, Ticket>();
+            cfg.CreateMap<DataBase.Models.Place, Place>();
             #endregion
 
             #region ViewModel To Base
@@ -47,9 +49,23 @@ public class SessionService : ServiceBase<DataBase.Models.Session>
         return Mapper.Map<List<Session>>(baseResult);
     }
 
-    public async Task<Session> GetByIdAsync(int id)
+    public override async Task<DataBase.Models.Session> GetByIdAsync(int id)
     {
-        var baseResult = await base.GetByIdAsync(id);
+        await using var context = GetContext<DataBaseContext>();
+
+        DbSet<DataBase.Models.Session> dbSet = context.Set<DataBase.Models.Session>();
+
+        return await dbSet.Where(session => session.Id == id)
+            .Include(session => session.Hall)
+            .Include(session => session.Play)
+            .Include(session => session.Tickets)
+            .ThenInclude(ticket => ticket.Place)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Session> GetById(int id)
+    {
+        var baseResult = await GetByIdAsync(id);
 
         return Mapper.Map<Session>(baseResult);
     }

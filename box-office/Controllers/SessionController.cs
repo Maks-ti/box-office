@@ -36,7 +36,7 @@ public class SessionController : AppControllerBase
     {
         try
         {
-            var result = await SessionService.GetByIdAsync(id);
+            var result = await SessionService.GetById(id);
 
             return Ok(result);
         }

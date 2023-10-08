@@ -10,9 +10,4 @@ public class MainPageController : Controller
     {
         return View();
     }
-
-    public IActionResult TicketPage()
-    {
-        return View();
-    }
 }

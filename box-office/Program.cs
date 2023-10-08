@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using box_office.Services;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Rewrite;
-using box_office.Services;
 using StackExchange.Redis;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
@@ -41,6 +40,19 @@ try
 
     builder.Configuration.AddConfiguration(configuration); // регистрируем конфигурацию
 
+    #region Kestrel
+    // Определение портов на основе окружения
+    int httpPort, httpsPort;
+    if (builder.Environment.IsDevelopment())
+    {
+        httpPort = builder.Configuration.GetValue<int>("Kestrel:Development:HttpPort");
+        httpsPort = builder.Configuration.GetValue<int>("Kestrel:Development:HttpsPort");
+    }
+    else
+    {
+        httpPort = builder.Configuration.GetValue<int>("Kestrel:Production:HttpPort");
+        httpsPort = builder.Configuration.GetValue<int>("Kestrel:Production:HttpsPort");
+    }
 
     // Настройка Kestrel
     bool successParseBodySize = int.TryParse(configuration["MaxRequestBodySize"], out int maxRequestBodySize); // парсим значение из конфигурации
@@ -49,8 +61,19 @@ try
         int size = (successParseBodySize) ? maxRequestBodySize : 30;
         // устанавливаем лимит на тело запроса
         options.Limits.MaxRequestBodySize = size * 1024 * 1024;
-    });
 
+        // получение информации о файле сертификата для httpS и пароле
+        string sertificeteFilePath = builder.Configuration.GetValue<string>("httpsSertificateInfo:filepath");
+        string sertificatePassword = builder.Configuration.GetValue<string>("httpsSertificateInfo:password");
+
+        // настройка портов
+        options.ListenAnyIP(httpPort); // HTTP
+        options.ListenAnyIP(httpsPort, listenOptions => // HTTPS
+        {
+            listenOptions.UseHttps(sertificeteFilePath, sertificatePassword);
+        });
+    });
+    #endregion
 
     #region Logging
     LayoutRenderer.Register<BoxOfficeLayoutRendererWrapper>("intercept");
@@ -197,6 +220,7 @@ try
     builder.Services.AddTransient<PlayService>();
     builder.Services.AddTransient<HallService>();
     builder.Services.AddTransient<SessionService>();
+    builder.Services.AddTransient<TicketService>();
 
     // добавляем hhtp-логгирование
     builder.Services.AddHttpLogging(options =>
