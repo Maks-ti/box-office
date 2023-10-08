@@ -66,6 +66,5 @@ appsettings.*.json
 *.nuget.props
 *.nuget.targets
 
-initdb/
 out/
 pgdata/
