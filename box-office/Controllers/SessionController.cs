@@ -1,4 +1,5 @@
 ﻿
+
 using box_office.Models;
 using box_office.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,21 +8,19 @@ namespace box_office.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HallController : AppControllerBase
+public class SessionController : AppControllerBase
 {
-    private HallService HallService { get; set; }
-    public HallController(IServiceProvider serviceProvider, ILogger<PlayController> logger, HallService hallService)
-        : base(serviceProvider, logger)
-    {
-        HallService = hallService;
-    }
+    private SessionService SessionService { get; set; }
+    public SessionController(IServiceProvider serviceProvider, ILogger<PlayController> logger, SessionService service) :
+        base(serviceProvider, logger)
+    { SessionService = service; }
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = await HallService.GetAllAsync();
+            var result = await SessionService.GetAll();
 
             return Ok(result);
         }
@@ -37,7 +36,7 @@ public class HallController : AppControllerBase
     {
         try
         {
-            var result = await HallService.GetByIdAsync(id);
+            var result = await SessionService.GetByIdAsync(id);
 
             return Ok(result);
         }
@@ -49,11 +48,11 @@ public class HallController : AppControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Create([FromBody] HallCreateModel model)
+    public async Task<IActionResult> Create([FromBody] SessionCreateModel model)
     {
         try
         {
-            var result = await HallService.CreateAsync(model);
+            var result = await SessionService.CreateAsync(model);
 
             return Ok(result);
         }
@@ -69,7 +68,7 @@ public class HallController : AppControllerBase
     {
         try
         {
-            await HallService.DeleteByIdAsync(id);
+            await SessionService.DeleteByIdAsync(id);
 
             return NoContent();
         }

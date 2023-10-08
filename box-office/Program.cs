@@ -194,7 +194,9 @@ try
 
     // регистрируем сервисы
     builder.Services.AddSingleton<AuthService>();
-    builder.Services.AddTransient<PlayService>(); 
+    builder.Services.AddTransient<PlayService>();
+    builder.Services.AddTransient<HallService>();
+    builder.Services.AddTransient<SessionService>();
 
     // добавляем hhtp-логгирование
     builder.Services.AddHttpLogging(options =>

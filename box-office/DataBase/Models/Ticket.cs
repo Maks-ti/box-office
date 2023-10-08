@@ -9,10 +9,9 @@ public class Ticket : IBaseEntity
     public int Id { get; set; }
     public int SessionId { get; set; }
     public int PlaceId { get; set; }
-    public int? UserId { get; set; }
+    public bool IsSold {  get; set; }
     public virtual Place Place { get; set; }
     public virtual Session Session { get; set; }
-    public virtual User User { get; set; }
 }
 
 public class TicketSourceConfiguration : IEntityTypeConfiguration<Ticket>
@@ -31,8 +30,8 @@ public class TicketSourceConfiguration : IEntityTypeConfiguration<Ticket>
         builder.Property(x => x.PlaceId)
             .HasColumnName("place_id");
 
-        builder.Property(x => x.UserId)
-            .HasColumnName("user_id");
+        builder.Property(x => x.IsSold)
+            .HasColumnName("is_sold");
 
         builder.HasOne(ticket => ticket.Place)
             .WithMany(place => place.Tickets)
@@ -41,9 +40,5 @@ public class TicketSourceConfiguration : IEntityTypeConfiguration<Ticket>
         builder.HasOne(ticket => ticket.Session)
             .WithMany(session => session.Tickets)
             .HasForeignKey(ticket => ticket.SessionId);
-
-        builder.HasOne(ticket => ticket.User)
-            .WithMany(user => user.Tickets)
-            .HasForeignKey(ticket => ticket.UserId);
     }
 }

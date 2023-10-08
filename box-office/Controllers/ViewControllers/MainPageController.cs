@@ -1,15 +1,17 @@
 ﻿
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace box_office.Controllers;
 
 public class MainPageController : Controller
 {
-    public IActionResult MainPage()
+    public IActionResult AdminPage()
+    {
+        return View();
+    }
+
+    public IActionResult TicketPage()
     {
         return View();
     }

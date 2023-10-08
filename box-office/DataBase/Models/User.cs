@@ -12,7 +12,6 @@ public class User : IBaseEntity
     public bool IsAdmin { get; set; }
     public string Salt { get; set; }
     public string PasswordHash { get; set; }
-    public virtual ICollection<Ticket> Tickets { get; set; }
 }
 
 public class UserSourceConfiguration : IEntityTypeConfiguration<User>

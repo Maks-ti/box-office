@@ -93,6 +93,8 @@
             const repeatPassword = document.getElementById("repeatPassword").value;
             const isAdmin = document.getElementById("isAdmin").checked;
 
+            localStorage.setItem("isAdmin", isAdmin);
+
             if (regPassword !== repeatPassword) {
                 alert("Пароли не совпадают!");
                 return;
@@ -134,7 +136,13 @@
                 headers.append('Authorization', `Bearer ${token}`);
             }
 
-            const redirectRequest = new Request('/MainPage/MainPage', {
+            let url = "";
+            if (localStorage.getItem("isAdmin")) {
+                url = '/MainPage/AdminPage';
+            } else {
+                url = '/MainPage/TicketPage';
+            }
+            const redirectRequest = new Request(url, {
                 method: 'GET', // Или другой HTTP метод
                 headers: headers
             });

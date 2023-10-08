@@ -9,6 +9,8 @@ public class Session
     public DateTime DateTo { get; set; }
     public int PlayId { get; set; }
     public int HallId { get; set; }
+    public Play Play { get; set; }
+    public Hall Hall { get; set; }
 }
 
 public class SessionCreateModel

@@ -19,18 +19,30 @@ public class SessionService : ServiceBase<DataBase.Models.Session>
 
             #region Base To ViewModel
             cfg.CreateMap<DataBase.Models.Session, Session>();
+            cfg.CreateMap<DataBase.Models.Play, Play>();
+            cfg.CreateMap<DataBase.Models.Hall, Hall>();
             #endregion
 
             #region ViewModel To Base
             cfg.CreateMap<Session, DataBase.Models.Session>();
             cfg.CreateMap<SessionCreateModel, DataBase.Models.Session>();
+            cfg.CreateMap<SessionUpdateModel, DataBase.Models.Session>();
             #endregion
         }).CreateMapper();
     }
 
-    public async Task<List<Session>> GetAllAsync()
+    public override async Task<IEnumerable<DataBase.Models.Session>> GetAllAsync()
     {
-        var baseResult = (await base.GetAllAsync()).ToList();
+        await using var context = GetContext<DataBaseContext>();
+
+        var dbSet = context.Set<DataBase.Models.Session>();
+
+        return await dbSet.Include(s => s.Play).Include(s => s.Hall).ToListAsync();
+    }
+
+    public async Task<List<Session>> GetAll()
+    {
+        var baseResult = (await GetAllAsync()).ToList();
 
         return Mapper.Map<List<Session>>(baseResult);
     }
@@ -76,7 +88,7 @@ public class SessionService : ServiceBase<DataBase.Models.Session>
                 Id = 0,
                 SessionId = session.Id,
                 PlaceId = place.Id,
-                UserId = null
+                IsSold = false
             };
 
             context.Tickets.Add(ticket);
